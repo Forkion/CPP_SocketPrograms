@@ -1,6 +1,6 @@
-#include "../headers/main_test.hpp"
+#include "../hdr/main_test.hpp"
 
-using namespace lib_test;
+using namespace lib;
 
 // counting_sort
 TEST(counting_sort, test_true){
@@ -19,19 +19,19 @@ TEST(counting_sort, test_false){
 
 
 
-// summ
-TEST(summ, test_true){
+// sum
+TEST(sum, test_true){
 	std::string arr1 = {"1234665"};
 	std::string arr2= {"KBKB5KB3KB1"};
 	counting_sort(arr1);
-	EXPECT_EQ(summ(arr1), 9);
+	EXPECT_EQ(sum(arr1), 9);
 }
 
-TEST(summ, test_false){
+TEST(sum, test_false){
 	std::string arr1 = {"12346659"};
 	std::string arr2= {"KBKB5KB3KB1"};
 	counting_sort(arr1);
-	EXPECT_NE(summ(arr1), 9);
+	EXPECT_NE(sum(arr1), 9);
 }
 
 
@@ -41,12 +41,16 @@ TEST(check_multiple_of_32, test_true){
 	std::string arr1 = {"0994633365"};
 	std::string arr2= {"99KBKB5KB333KB"};
 	counting_sort(arr1);
-	EXPECT_EQ(check_multiple_of_32(arr1), true);
+	unsigned new_sum = sum(arr1);
+	bool res = check_multiple_of_32(arr1, new_sum);
+	EXPECT_EQ(res, true);
 }
 
 TEST(check_multiple_of_32, test_false){
 	std::string arr1 = {"1234665"};
 	std::string arr2= {"KBKB5KB3KB1"};
 	counting_sort(arr1);
-	EXPECT_NE(check_multiple_of_32(arr1), true);
+	unsigned new_sum = sum(arr1);
+	bool res = check_multiple_of_32(arr1, new_sum);
+	EXPECT_NE(res, true);
 }

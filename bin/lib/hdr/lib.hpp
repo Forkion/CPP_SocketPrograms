@@ -18,14 +18,14 @@
 противном случае функция возвращает «ложь».
 */
 
-namespace lib_test{
+namespace lib{
 
 /**
  * @brief Сортирует элементы входной строки по убыванию и все четные элементы заменяет на латинские
  * буквы «КВ»
  * @details Реализована собственная версия алгоритма "сортировка подсчётом (Counting Sort)"
  */
-void counting_sort(std::string& arr) noexcept;
+void counting_sort(std::string& str) noexcept;
 
 /**
  * @brief Рассчитывает общую сумму всех элементов входной строки.
@@ -33,7 +33,7 @@ void counting_sort(std::string& arr) noexcept;
  * @return Возвращает общую сумму всех элементов входной строки.
  * @details Возвращаемое значение unsigned, потому что суммируются только положительные значения (цифры)
  */
- [[nodiscard]] unsigned int summ(std::string& arr) noexcept;
+ [[nodiscard]] unsigned sum(std::string& str) noexcept;
 
 /**
  * @brief Анализирует, из скольки символов состоит входная строка. Если оно больше 2-ух символов и, если
@@ -44,7 +44,7 @@ void counting_sort(std::string& arr) noexcept;
  * @details В формулировке задачи третьей функции я не уверен, по этому сделал так, как понял, а именно:
  * если количество символов строки больше 2, и значение суммы элементов строки кратно 32, то функция возвращает "истину"
  */
- [[nodiscard]] bool check_multiple_of_32(std::string& arr) noexcept;
+ [[nodiscard]] bool check_multiple_of_32(std::string& str, unsigned& new_sum) noexcept;
 
 };
 

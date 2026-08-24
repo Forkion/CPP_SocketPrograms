@@ -2,7 +2,7 @@
 #define SOCKET_PROGRAMS_TESTS
 
 #include <gtest/gtest.h>
-#include "../../src/lib/headers/lib.hpp"
+#include "../../bin/lib/hdr/lib.hpp"
 
 using namespace std;
 

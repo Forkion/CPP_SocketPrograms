@@ -1,4 +1,4 @@
-#include "../headers/main_test.hpp"
+#include "../hdr/main_test.hpp"
 
 int main(int argc, char* argv[]){
 	testing::InitGoogleTest(&argc, argv);
