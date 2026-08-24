@@ -13,8 +13,8 @@ BUILD = build/
 OBJ = $(BUILD)obj/
 GCOV = $(BUILD)gcov_report/
 LIB_OBJ = $(patsubst $(SRC_LIB)%.cpp, $(OBJ)%.o, $(LIB))
-LIB_SO = build/lib.so
-
+LIB_NAME = lib.so
+LIB_SO = build/$(LIB_NAME)
 
 SRC_APP_GEN = bin/app_gen/src/*.cpp
 SRC_APP1 = bin/app1/src/*.cpp
@@ -31,14 +31,14 @@ $(OBJ)%.o: $(SRC_LIB)%.cpp
 $(LIB_SO): $(LIB_OBJ)
 	$(GPP) -shared $^ -o $@
 
-app1: $(SRC_APP1) $(LIB) $(SRC_APP_GEN)
-	rm $(BUILD)app1
-	$(GPP) $(FLAGS_GPP) $^ -o $(BUILD)$@
+app1: $(SRC_APP1) $(SRC_APP_GEN) $(LIB_SO)
+	rm -rf $(BUILD)app1
+	$(GPP) $(FLAGS_GPP) $^ -L$(BUILD) -l:$(LIB_NAME) -o $(BUILD)$@
 # 	./$(BUILD)app1
 
-app2: $(SRC_APP2) $(LIB) $(SRC_APP_GEN)
-	rm $(BUILD)app2
-	$(GPP) $(FLAGS_GPP) $^ -o $(BUILD)$@
+app2: $(SRC_APP2) $(SRC_APP_GEN) $(LIB_SO)
+	rm -rf $(BUILD)app2
+	$(GPP) $(FLAGS_GPP) $^ -L$(BUILD) -l:$(LIB_NAME) -o $(BUILD)$@
 # 	./$(BUILD)app2 &
 
 run_app1:
@@ -47,20 +47,17 @@ run_app1:
 run_app2:
 	./$(BUILD)app2
 
-test: $(LIB) $(TESTS)
-	$(GPP) $(FLAGS_GPP) $^ -o $(BUILD)$@ $(FLAGS_GTEST)
-	./$(BUILD)$@
-
 test: clean test1
+
+
+test1: $(TESTS) $(LIB_SO)
+	$(GPP) $(FLAGS_GPP) $^ -L$(BUILD) -l:$(LIB_NAME) -o $(BUILD)$@ $(FLAGS_GTEST)
+	./$(BUILD)$@
 
 valgrind_test: clean valgrind_test1
 
-test1: $(LIB) $(TESTS)
-	$(GPP) $(FLAGS_GPP) $^ -o $(BUILD)$@ $(FLAGS_GTEST)
-	./$(BUILD)$@
-
-valgrind_test1: $(LIB) $(TESTS)
-	$(GPP) $(FLAGS_GPP) $^ -o $(BUILD)$@ $(FLAGS_GTEST)
+valgrind_test1: $(TESTS) $(LIB_SO)
+	$(GPP) $(FLAGS_GPP) $^ -L$(BUILD) -l:$(LIB_NAME) -o $(BUILD)$@ $(FLAGS_GTEST)
 	valgrind $(VALGRIND_FLAGS) ./$(BUILD)$@
 
 gcov_report: $(TESTS) $(LIB)
@@ -89,20 +86,18 @@ clang:
 		bin/app_gen/src/*.cpp bin/app_gen/hdr/*.hpp \
 		bin/app1/src/*.cpp bin/app1/hdr/*.hpp \
 		bin/app2/src/*.cpp bin/app2/hdr/*.hpp \
-		bin/tests/src/*.cpp bin/tests/hdr/*.hpp
+		tests/src/*.cpp tests/hdr/*.hpp
 
 check_clang:
 	@clang-format --style=Google -n \
-		bin/app_gen/src/*.cpp bin/app_gen/hdr/*.hpp \
 		bin/lib/src/*.cpp bin/lib/hdr/*.hpp \
+		bin/app_gen/src/*.cpp bin/app_gen/hdr/*.hpp \
 		bin/app1/src/*.cpp bin/app1/hdr/*.hpp \
 		bin/app2/src/*.cpp bin/app2/hdr/*.hpp \
 		tests/src/*.cpp tests/hdr/*.hpp
 
 stop: stop_app1 stop_app2
  	#sudo fuser -k 32929/tcp
-	@pkill app1 || true
-	@pkill app2 || true
 
 stop_app1:
 	@pkill app1 || true
